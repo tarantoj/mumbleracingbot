@@ -36,7 +36,7 @@ export default class Streamer {
   }
 
   private startStream(chan: number) {
-    if (this.childProcess) this.childProcess.kill(SIGINT);
+    this.stop();
 
     const args = ['-re',
       `-i ${process.env.SOURCE_HOST}/stream/channelnumber/${chan}`,
@@ -48,8 +48,6 @@ export default class Streamer {
       `${process.env.TWITCH_INJEST}${process.env.TWITCH_STREAM_KEY}`];
 
     this.childProcess = spawn(pathToFfmpeg, args, { shell: true });
-    this.childProcess.stdout?.on('data', (data) => console.log(`info: ${data}`));
-    this.childProcess.stderr?.on('data', (data) => console.error(`error: ${data}`));
   }
 
   // eslint-disable-next-line no-unused-vars
@@ -61,6 +59,6 @@ export default class Streamer {
   }
 
   stop() {
-    if (this.childProcess) this.childProcess?.kill(SIGINT);
+    this.childProcess?.stdin?.write('q');
   }
 }
