@@ -3,6 +3,7 @@ import * as tmi from 'tmi.js';
 import * as dotenv from 'dotenv';
 import Streamer from './streamer';
 import logger from './logger';
+import { cli } from 'winston/lib/winston/config';
 
 dotenv.config({ path: '.env' });
 
@@ -61,6 +62,16 @@ const messageListener = async (channel: string,
     if (process.env.NODE_ENV === 'prod') Streamer.getInstance().stop();
     logger.info('Got request to stop streaming');
     client.say(channel, 'Got it! Will stop streaming.');
+  }
+
+  if (message.startsWith('!chans')) {
+    logger.info('!chans');
+    client.say(channel, process.env.AVAILABLE_CHANNELS?.split(',').toString() || 'None! :(');
+  }
+
+  if (message.startsWith('!help')) {
+    logger.info('!help');
+    client.say(channel, '!help: Print this message\n!switch <channel>: Switch to channel specified\n!stop: Stop streaming\n!chans: Get a list of available channels');
   }
 };
 
