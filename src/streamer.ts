@@ -1,4 +1,5 @@
 import { ChildProcess, spawn } from 'child_process';
+import { SIGINT } from 'constants';
 import pathToFfmpeg from 'ffmpeg-static';
 import { setTimeout } from 'timers';
 
@@ -35,18 +36,20 @@ export default class Streamer {
   }
 
   private startStream(chan: number) {
-    if (this.childProcess) this.childProcess.kill();
+    if (this.childProcess) this.childProcess.kill(SIGINT);
 
     const args = ['-re',
       `-i ${process.env.SOURCE_HOST}/stream/channelnumber/${chan}`,
       '-c copy',
       '-flags +global_header',
       '-bsf:a aac_adtstoasc',
-      '-bufsize 3M',
+      '-bufsize 3000K',
       '-f flv',
       `${process.env.TWITCH_INJEST}${process.env.TWITCH_STREAM_KEY}`];
 
-    this.childProcess = spawn(pathToFfmpeg, args);
+    this.childProcess = spawn(pathToFfmpeg, args, { shell: true });
+    this.childProcess.stdout?.on('data', (data) => console.log(`info: ${data}`));
+    this.childProcess.stderr?.on('data', (data) => console.error(`error: ${data}`));
   }
 
   // eslint-disable-next-line no-unused-vars
