@@ -4,7 +4,6 @@ import * as dotenv from 'dotenv';
 import Streamer from './streamer';
 
 dotenv.config({ path: '.env' });
-console.log(process.env.BOT_USERNAME);
 
 const twitchOpts: tmi.Options = {
   identity: {
@@ -29,7 +28,7 @@ const messageListener = async (channel: string,
   message: String,
   self: boolean) => {
   if (self) return;
-  if (!_.includes(process.env.AUTHORISED_USERS?.split(','), userstate.username)) return;
+  if (!_.includes(process.env.AUTHORISED_USERS?.split(','), userstate.username?.toLowerCase())) return;
 
   if (message.startsWith('!switch')) {
     const chanNum = Number(message.split(' ')[1]);
