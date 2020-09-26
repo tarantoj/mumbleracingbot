@@ -36,7 +36,7 @@ export default class Streamer {
   }
 
   private startStream(chan: number) {
-    this.stop();
+    if (this.childProcess?.exitCode != null) this.stop();
 
     const args = ['-re',
       `-i ${process.env.SOURCE_HOST}/stream/channelnumber/${chan}`,
