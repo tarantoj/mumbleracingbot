@@ -38,6 +38,8 @@ export default class Streamer {
   private startStream(chan: number) {
     if (this.childProcess?.exitCode != null) this.stop();
 
+    this.channel = chan;
+
     const args = ['-re',
       `-i ${process.env.SOURCE_HOST}/stream/channelnumber/${chan}`,
       '-c copy',
@@ -60,5 +62,6 @@ export default class Streamer {
 
   stop() {
     this.childProcess?.stdin?.write('q');
+    this.channel = undefined;
   }
 }
