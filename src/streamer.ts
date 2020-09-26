@@ -35,8 +35,9 @@ export default class Streamer {
     this.setTimeouts(reminderCallback, this.stop);
   }
 
-  private startStream(chan: number) {
-    if (this.childProcess?.exitCode) this.stop();
+  private async startStream(chan: number) {
+    logger.error(this.childProcess?.exitCode);
+    if (this.childProcess?.exitCode) await this.stop();
 
     this.channel = chan;
 
@@ -65,7 +66,7 @@ export default class Streamer {
 
   stop() {
     logger.info('Stopping ffmpeg');
-    this.childProcess?.stdin?.write('q');
     this.channel = undefined;
+    return this.childProcess?.stdin?.write('q');
   }
 }
