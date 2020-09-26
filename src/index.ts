@@ -3,7 +3,13 @@ import * as tmi from 'tmi.js';
 import * as dotenv from 'dotenv';
 import Streamer from './streamer';
 
-const twitchOpts: tmi.Options = {};
+const twitchOpts: tmi.Options = {
+  identity: {
+    username: process.env.BOT_USERNAME,
+    password: process.env.OAUTH_TOKEN,
+  },
+  channels: process.env.CHANNEL_NAMES?.split(','),
+};
 const client = tmi.Client(twitchOpts);
 
 dotenv.config();

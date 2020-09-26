@@ -36,15 +36,17 @@ export default class Streamer {
 
   private startStream(chan: number) {
     if (this.childProcess) this.childProcess.kill();
-    this.childProcess = spawn(pathToFfmpeg,
-      ['-re',
-        `-i ${process.env.SOURCE_URL}${chan}`,
-        '-c copy',
-        '-flags +global_header',
-        '-bsf:a aac_adtstoasc',
-        '-bufsize 3M',
-        '-f flv',
-        `${process.env.TWITCH_INJEST}${process.env.TWITCH_STREAM_KEY}`]);
+
+    const args = ['-re',
+      `-i ${process.env.SOURCE_URL}${chan}`,
+      '-c copy',
+      '-flags +global_header',
+      '-bsf:a aac_adtstoasc',
+      '-bufsize 3M',
+      '-f flv',
+      `${process.env.TWITCH_INJEST}${process.env.TWITCH_STREAM_KEY}`];
+
+    this.childProcess = spawn(pathToFfmpeg, args);
   }
 
   // eslint-disable-next-line no-unused-vars
