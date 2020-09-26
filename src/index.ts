@@ -36,7 +36,7 @@ const messageListener = async (channel: string,
   userstate: tmi.ChatUserstate,
   message: String,
   self: boolean) => {
-  logger.info(`channel: ${channel}, userstate: ${userstate}, message: ${message}, self: ${self}`);
+  logger.info(`channel: ${channel}, username: ${userstate.username}, message: ${message}, self: ${self}`);
 
   if (self) return;
   if (!_.includes(process.env.AUTHORISED_USERS?.split(','), userstate.username?.toLowerCase())) return;
