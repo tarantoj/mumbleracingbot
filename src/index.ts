@@ -23,13 +23,13 @@ client.connect()
     client.say(process.env.CHANNEL_NAMES?.split(',')[0] || 'mumbleracing', 'bot enabled!');
     logger.info('connected!');
   })
-  .catch(logger.error);
+  .catch((reason) => logger.error(`Connect failed with ${reason}`));
 
 const reminderCallback = (channel: string) => {
   logger.info('Reminder triggered');
   client.say(channel, 'Still watching? Send \'!stillhere\' to keep the streaming going for another hour.')
     .then()
-    .catch(logger.error);
+    .catch((reason) => logger.error(`Reminder say failed with ${reason}`));
 };
 
 const messageListener = async (channel: string,
