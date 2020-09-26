@@ -1,7 +1,7 @@
 import { ChildProcess, spawn } from 'child_process';
-import { SIGINT } from 'constants';
 import pathToFfmpeg from 'ffmpeg-static';
 import { setTimeout } from 'timers';
+import logger from './logger';
 
 export default class Streamer {
   private static instance: Streamer
@@ -51,6 +51,8 @@ export default class Streamer {
       `${process.env.TWITCH_INJEST}${process.env.TWITCH_STREAM_KEY}`];
 
     this.childProcess = spawn(pathToFfmpeg, args, { shell: true });
+
+    this.childProcess?.stderr?.on('data', logger.warn);
   }
 
   // eslint-disable-next-line no-unused-vars
@@ -62,6 +64,7 @@ export default class Streamer {
   }
 
   stop() {
+    logger.info('Stopping ffmpeg');
     this.childProcess?.stdin?.write('q');
     this.channel = undefined;
   }

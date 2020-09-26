@@ -2,6 +2,7 @@ import * as _ from 'lodash';
 import * as tmi from 'tmi.js';
 import * as dotenv from 'dotenv';
 import Streamer from './streamer';
+import logger from './logger';
 
 dotenv.config({ path: '.env' });
 
@@ -17,19 +18,26 @@ const twitchOpts: tmi.Options = {
 
 const client = tmi.Client(twitchOpts);
 
-client.connect().catch();
-client.say(process.env.CHANNEL_NAMES?.split(',')[0] || 'mumbleracing', 'bot enabled!');
+client.connect()
+  .then(() => {
+    client.say(process.env.CHANNEL_NAMES?.split(',')[0] || 'mumbleracing', 'bot enabled!');
+    logger.info('connected!');
+  })
+  .catch(logger.error);
 
 const reminderCallback = (channel: string) => {
+  logger.info('Reminder triggered');
   client.say(channel, 'Still watching? Send \'!stillhere\' to keep the streaming going for another hour.')
     .then()
-    .catch();
+    .catch(logger.error);
 };
 
 const messageListener = async (channel: string,
   userstate: tmi.ChatUserstate,
   message: String,
   self: boolean) => {
+  logger.info(`channel: ${channel}, userstate: ${userstate}, message: ${message}, self: ${self}`);
+
   if (self) return;
   if (!_.includes(process.env.AUTHORISED_USERS?.split(','), userstate.username?.toLowerCase())) return;
 
@@ -39,19 +47,19 @@ const messageListener = async (channel: string,
     if (process.env.NODE_ENV === 'prod') {
       Streamer.getInstance().change(chanNum, () => reminderCallback(channel));
     }
-    else console.log(`Got request to change to ${chanNum}`);
+    logger.info(`Got request to change to ${chanNum}`);
     await client.say(channel, `Changing channel to ${chanNum}`);
   }
 
   if (message.startsWith('!stillhere')) {
     if (process.env.NODE_ENV === 'prod') Streamer.getInstance().stillHere(() => reminderCallback(channel));
-    else console.log('Got request to keep streaming');
+    logger.info('Got request to keep streaming');
     client.say(channel, 'Got it! Will keep streaming for another hour.');
   }
 
   if (message.startsWith('!stop')) {
     if (process.env.NODE_ENV === 'prod') Streamer.getInstance().stop();
-    else console.log('Got request to stop streaming');
+    logger.info('Got request to stop streaming');
     client.say(channel, 'Got it! Will stop streaming.');
   }
 };
