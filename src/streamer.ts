@@ -36,7 +36,7 @@ export default class Streamer {
   }
 
   private startStream(chan: number) {
-    if (this.childProcess?.exitCode != null) this.stop();
+    if (this.childProcess?.exitCode) this.stop();
 
     this.channel = chan;
 
