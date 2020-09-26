@@ -48,6 +48,12 @@ const messageListener = async (channel: string,
     else console.log('Got request to keep streaming');
     client.say(channel, 'Got it! Will keep streaming for another hour.');
   }
+
+  if (message.startsWith('!stop')) {
+    if (process.env.NODE_ENV === 'prod') Streamer.getInstance().stop();
+    else console.log('Got request to stop streaming');
+    client.say(channel, 'Got it! Will stop streaming.');
+  }
 };
 
 client.on('message', messageListener);
