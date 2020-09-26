@@ -53,7 +53,7 @@ export default class Streamer {
 
     this.childProcess = spawn(pathToFfmpeg, args, { shell: true });
 
-    this.childProcess?.stderr?.on('data', (data) => logger.warn(data));
+    this.childProcess?.stderr?.on('data', (data) => logger.warn(`${data}`));
   }
 
   // eslint-disable-next-line no-unused-vars
