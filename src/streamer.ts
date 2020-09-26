@@ -36,8 +36,7 @@ export default class Streamer {
   }
 
   private async startStream(chan: number) {
-    logger.error(this.childProcess?.exitCode);
-    if (!this.childProcess?.exitCode) await this.stop();
+    if (!this.childProcess?.exitCode || !this.channel) await this.stop();
 
     this.channel = chan;
 
