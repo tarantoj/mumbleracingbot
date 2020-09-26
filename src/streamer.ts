@@ -40,7 +40,8 @@ export default class Streamer {
 
     this.channel = chan;
 
-    const args = ['-re',
+    const args = ['-loglevel warning',
+      '-re',
       `-i ${process.env.SOURCE_HOST}/stream/channelnumber/${chan}`,
       '-c copy',
       '-flags +global_header',
