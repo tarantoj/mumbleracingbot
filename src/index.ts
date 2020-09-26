@@ -1,33 +1,36 @@
 import * as _ from 'lodash';
 import * as tmi from 'tmi.js';
 import * as dotenv from 'dotenv';
-import * as child_process from 'child_process';
+import Streamer from './streamer';
 
-const authdUsers = ['mothatt'];
-const availChans = [506, 507]
-let ffmpeg: child_process.ChildProcess;
+const twitchOpts: tmi.Options = {};
+const client = tmi.Client(twitchOpts);
 
-const opts: tmi.Options = {};
-const client = tmi.Client(opts);
+dotenv.config();
 
-client.connect().catch(console.error);
+client.connect().catch();
 
-const switchChan = (chanNum: Number) => {
-  ffmpeg.kill();
-  ffmpeg = child_process.spawn('ffmpeg');
+const reminderCallback = (channel: string) => {
+  client.say(channel, 'Still watching? Send \'!stillhere\' to keep the streaming going for another hour.')
+    .then()
+    .catch();
 };
 
-const messageListener = (channel: String,
+const messageListener = (channel: string,
   userstate: tmi.ChatUserstate,
   message: String,
   self: boolean) => {
   if (self) return;
-  if (!_.includes(authdUsers, userstate.username)) return;
+  if (!_.includes(process.env.AUTHORISED_USERS?.split(','), userstate.username)) return;
 
   if (message.startsWith('!switch')) {
-    const chanNum = parseInt(message.split(' ')[1], 10);
-    if (!_.includes(availChans, chanNum)) return;
-    switchChan(chanNum);
+    const chanNum = Number(message.split(' ')[1]);
+    if (!_.includes(process.env.AVAILABLE_CHANNELS?.split(',').map((c) => Number(c)), chanNum)) return;
+    Streamer.getInstance().change(chanNum, () => reminderCallback(channel));
+  }
+
+  if (message.startsWith('!stillhere')) {
+    Streamer.getInstance().stillHere(() => reminderCallback(channel));
   }
 };
 
