@@ -60,7 +60,7 @@ export default class Streamer {
     this.stopTimeout = setTimeout(stopCallback, 60 * this.minToMs);
   }
 
-  private stop() {
-    this.childProcess?.kill();
+  stop() {
+    if (this.childProcess) this.childProcess?.kill(SIGINT);
   }
 }
