@@ -21,7 +21,7 @@ const client = tmi.Client(twitchOpts);
 
 client.connect()
   .then(() => {
-    client.say(process.env.CHANNEL_NAMES?.split(',')[0] || 'mumbleracing', 'bot enabled!');
+    client.say(process.env.CHANNEL_NAMES?.split(',')[0] || 'mumbleracing', 'bot connected!');
     logger.info('connected!');
   })
   .catch((reason) => logger.error(`Connect failed with ${reason}`));
