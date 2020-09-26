@@ -1,6 +1,23 @@
 {
   "extends": "@tsconfig/recommended/tsconfig.json",
-  "lib": ["es2017"],
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "**/*.spec.ts"]
+  "compilerOptions": {
+    "outDir": "dist",
+    "paths": {
+      "*": [
+        "node_modules/*",
+        "src/types/*"
+      ]
+    },
+    "baseUrl": "."
+  },
+  "lib": [
+    "es2017"
+  ],
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts"
+  ]
 }

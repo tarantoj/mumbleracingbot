@@ -3,6 +3,9 @@ import * as tmi from 'tmi.js';
 import * as dotenv from 'dotenv';
 import Streamer from './streamer';
 
+dotenv.config({ path: '.env' });
+console.log(process.env.BOT_USERNAME);
+
 const twitchOpts: tmi.Options = {
   identity: {
     username: process.env.BOT_USERNAME,
@@ -12,9 +15,8 @@ const twitchOpts: tmi.Options = {
 };
 const client = tmi.Client(twitchOpts);
 
-dotenv.config();
-
 client.connect().catch();
+client.say(process.env.CHANNEL_NAMES?.split(',')[0] || 'mumbleracing', 'bot enabled!');
 
 const reminderCallback = (channel: string) => {
   client.say(channel, 'Still watching? Send \'!stillhere\' to keep the streaming going for another hour.')
@@ -22,7 +24,7 @@ const reminderCallback = (channel: string) => {
     .catch();
 };
 
-const messageListener = (channel: string,
+const messageListener = async (channel: string,
   userstate: tmi.ChatUserstate,
   message: String,
   self: boolean) => {
@@ -32,11 +34,17 @@ const messageListener = (channel: string,
   if (message.startsWith('!switch')) {
     const chanNum = Number(message.split(' ')[1]);
     if (!_.includes(process.env.AVAILABLE_CHANNELS?.split(',').map((c) => Number(c)), chanNum)) return;
-    Streamer.getInstance().change(chanNum, () => reminderCallback(channel));
+    if (process.env.NODE_ENV === 'prod') {
+      Streamer.getInstance().change(chanNum, () => reminderCallback(channel));
+    }
+    else console.log(`Got request to change to ${chanNum}`);
+    await client.say(channel, `Changing channel to ${chanNum}`);
   }
 
   if (message.startsWith('!stillhere')) {
-    Streamer.getInstance().stillHere(() => reminderCallback(channel));
+    if (process.env.NODE_ENV === 'prod') Streamer.getInstance().stillHere(() => reminderCallback(channel));
+    else console.log('Got request to keep streaming');
+    client.say(channel, 'Got it! Will keep streaming for another hour.');
   }
 };
 
