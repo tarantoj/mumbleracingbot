@@ -38,7 +38,7 @@ export default class Streamer {
     if (this.childProcess) this.childProcess.kill();
 
     const args = ['-re',
-      `-i ${process.env.SOURCE_URL}${chan}`,
+      `-i ${process.env.SOURCE_HOST}/stream/channelnumber/${chan}`,
       '-c copy',
       '-flags +global_header',
       '-bsf:a aac_adtstoasc',

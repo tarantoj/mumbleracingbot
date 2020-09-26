@@ -5,6 +5,8 @@ import Streamer from './streamer';
 
 dotenv.config({ path: '.env' });
 
+process.env.NODE_ENV = process.env.NODE_ENV || 'prod';
+
 const twitchOpts: tmi.Options = {
   identity: {
     username: process.env.BOT_USERNAME,
@@ -12,6 +14,7 @@ const twitchOpts: tmi.Options = {
   },
   channels: process.env.CHANNEL_NAMES?.split(','),
 };
+
 const client = tmi.Client(twitchOpts);
 
 client.connect().catch();
