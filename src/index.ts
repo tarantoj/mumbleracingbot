@@ -59,7 +59,7 @@ const messageListener = async (channel: string,
   }
 
   if (message.startsWith('!stop')) {
-    if (process.env.NODE_ENV === 'prod') Streamer.getInstance().stop().catch(process.exit());
+    if (process.env.NODE_ENV === 'prod') Streamer.getInstance().stop().catch(() => process.exit());
     logger.info('Got request to stop streaming');
     client.say(channel, 'Got it! Will stop streaming.');
   }
