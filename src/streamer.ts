@@ -88,7 +88,7 @@ export default class Streamer {
     return new Promise((resolve, reject) => {
       if (!this.childProcess) resolve();
       this.childProcess?.stdin?.write('q');
-      this.childProcess?.kill();
+      this.childProcess?.kill('SIGINT');
       this.childProcess?.on('close', () => {
         logger.info('ffmpeg closed');
         this.channel = undefined;
