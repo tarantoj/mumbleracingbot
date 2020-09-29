@@ -46,7 +46,7 @@ export default class Streamer {
   }
 
   private async startStream(chan: number) {
-    if ((!this.childProcess?.exitCode || !this.channel)) {
+    if ((this.childProcess || !this.channel)) {
       try {
         await this.stop();
       } catch (error) {
@@ -92,11 +92,13 @@ export default class Streamer {
       this.childProcess?.on('close', () => {
         logger.info('ffmpeg closed');
         this.channel = undefined;
+        this.childProcess = undefined;
         resolve();
       });
       this.childProcess?.on('exit', () => {
         logger.info('ffmpeg exited');
         this.channel = undefined;
+        this.childProcess = undefined;
         resolve();
       });
       setTimeout(() => reject(new Error('Timeout')), 5000);
