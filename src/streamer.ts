@@ -57,7 +57,8 @@ export default class Streamer {
 
     this.channel = chan;
 
-    const args = ['-loglevel info',
+    const args = [
+      `-loglevel ${process.env.FFMPEG_LOG_LEVEL || 'fatal'}`,
       '-re',
       `-i ${process.env.SOURCE_HOST}/stream/channelnumber/${chan}`,
       '-c copy',
@@ -65,7 +66,8 @@ export default class Streamer {
       '-bsf:a aac_adtstoasc',
       '-bufsize 3000K',
       '-f flv',
-      `${process.env.TWITCH_INJEST}${process.env.TWITCH_STREAM_KEY}`];
+      `${process.env.TWITCH_INJEST}${process.env.TWITCH_STREAM_KEY}`
+    ];
 
     this.childProcess = spawn(pathToFfmpeg, args, { shell: true });
 
