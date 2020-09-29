@@ -14,7 +14,17 @@ export default class Streamer {
 
   private stopTimeout?: NodeJS.Timeout
 
-  private minToMs = 60000;
+  private static minToMs = 60000;
+
+  private static stopTime(): number {
+    const mins = Number(process.env.STOP_TIME) ?? 60;
+    return mins * Streamer.minToMs;
+  }
+
+  private static reminderTime(): number {
+    const diff = Number(process.env.REMINDER_DIFFERENCE) ?? 5;
+    return Streamer.stopTime() - (diff * Streamer.minToMs);
+  }
 
   static getInstance(): Streamer {
     if (!Streamer.instance) Streamer.instance = new Streamer();
@@ -59,13 +69,19 @@ export default class Streamer {
   private setTimeouts(reminderCallback: (...args: any[]) => void, stopCallback: () => void) {
     if (this.reminderTimeout) clearTimeout(this.reminderTimeout);
     if (this.stopTimeout) clearTimeout(this.stopTimeout);
-    this.reminderTimeout = setTimeout(reminderCallback, 55 * this.minToMs);
-    this.stopTimeout = setTimeout(stopCallback, 60 * this.minToMs);
+    this.reminderTimeout = setTimeout(reminderCallback, Streamer.reminderTime());
+    this.stopTimeout = setTimeout(stopCallback, Streamer.stopTime());
   }
 
-  stop() {
+  stop(): Promise<void> {
     logger.info('Stopping ffmpeg');
-    this.channel = undefined;
-    return this.childProcess?.stdin?.write('q');
+    this.childProcess?.stdin?.write('q');
+    return new Promise((resolve, reject) => {
+      this.childProcess?.on('exit', () => {
+        this.channel = undefined;
+        resolve();
+      });
+      this.childProcess?.on('error', () => reject());
+    });
   }
 }
