@@ -88,10 +88,12 @@ export default class Streamer {
     this.childProcess?.stdin?.write('q');
     return new Promise((resolve, reject) => {
       this.childProcess?.on('exit', () => {
+        logger.info('ffmpeg exited');
         this.channel = undefined;
         resolve();
       });
-      this.childProcess?.on('error', () => {
+      this.childProcess?.on('error', (error) => {
+        logger.error(error);
         if (!this.childProcess?.kill()) reject();
       });
     });
