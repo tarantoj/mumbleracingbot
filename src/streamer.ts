@@ -42,7 +42,7 @@ export default class Streamer {
       .map((c) => Number(c))
       .includes(chan)) return;
     if (chan !== this.channel) this.startStream(chan);
-    this.setTimeouts(reminderCallback, this.stop);
+    this.setTimeouts(reminderCallback, async () => this.stop());
   }
 
   private async startStream(chan: number) {
