@@ -46,7 +46,7 @@ export default class Streamer {
   }
 
   private async startStream(chan: number) {
-    if (this.childProcess && (!this.childProcess?.exitCode || !this.channel)) {
+    if ((!this.childProcess?.exitCode || !this.channel)) {
       try {
         await this.stop();
       } catch (error) {
@@ -66,7 +66,7 @@ export default class Streamer {
       '-bsf:a aac_adtstoasc',
       '-bufsize 3000K',
       '-f flv',
-      `${process.env.TWITCH_INJEST}${process.env.TWITCH_STREAM_KEY}`
+      `${process.env.TWITCH_INJEST}${process.env.TWITCH_STREAM_KEY}`,
     ];
 
     this.childProcess = spawn(pathToFfmpeg, args, { shell: true });
@@ -86,8 +86,14 @@ export default class Streamer {
   stop(): Promise<void> {
     logger.info('Stopping ffmpeg');
     return new Promise((resolve, reject) => {
+      if (!this.childProcess) resolve();
       this.childProcess?.stdin?.write('q');
       this.childProcess?.kill();
+      this.childProcess?.on('close', () => {
+        logger.info('ffmpeg exited');
+        this.channel = undefined;
+        resolve();
+      });
       this.childProcess?.on('exit', () => {
         logger.info('ffmpeg exited');
         this.channel = undefined;
