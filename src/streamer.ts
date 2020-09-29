@@ -99,10 +99,7 @@ export default class Streamer {
         this.channel = undefined;
         resolve();
       });
-      this.childProcess?.on('error', (error) => {
-        logger.error(error);
-        if (!this.childProcess?.kill()) reject();
-      });
+      setTimeout(() => reject(new Error('Timeout')), 500);
     });
   }
 }
