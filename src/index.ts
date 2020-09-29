@@ -71,7 +71,10 @@ const messageListener = async (channel: string,
 
   if (message.startsWith('!help')) {
     logger.info('!help');
-    client.say(channel, '!help: Print this message\r\n!switch <channel>: Switch to channel specified\r\n!stop: Stop streaming\r\n!chans: Get a list of available channels');
+    client.say(channel, '!help: Print this message');
+    client.say(channel, '!switch <channel>: Switch to channel specified');
+    client.say(channel, '!stop: Stop streaming');
+    client.say(channel, '!chans: Get a list of available channels');
   }
 };
 
