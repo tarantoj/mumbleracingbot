@@ -99,7 +99,7 @@ export default class Streamer {
         this.channel = undefined;
         resolve();
       });
-      setTimeout(() => reject(new Error('Timeout')), 500);
+      setTimeout(() => reject(new Error('Timeout')), 5000);
     });
   }
 }
