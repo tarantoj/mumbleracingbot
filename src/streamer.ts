@@ -50,7 +50,7 @@ export default class Streamer {
 
     this.channel = chan;
 
-    const args = ['-loglevel warning',
+    const args = ['-loglevel info',
       '-re',
       `-i ${process.env.SOURCE_HOST}/stream/channelnumber/${chan}`,
       '-c copy',
@@ -63,6 +63,7 @@ export default class Streamer {
     this.childProcess = spawn(pathToFfmpeg, args, { shell: true });
 
     this.childProcess?.stderr?.on('data', (data) => logger.warn(`ffmpeg: ${data}`));
+    this.childProcess?.stdout?.on('data', (data) => logger.info(`ffmpeg: ${data}`));
   }
 
   // eslint-disable-next-line no-unused-vars
