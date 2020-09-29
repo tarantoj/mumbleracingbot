@@ -46,7 +46,14 @@ export default class Streamer {
   }
 
   private async startStream(chan: number) {
-    if (this.childProcess && (!this.childProcess?.exitCode || !this.channel)) await this.stop();
+    if (this.childProcess && (!this.childProcess?.exitCode || !this.channel)) {
+      try {
+        await this.stop();
+      } catch (error) {
+        logger.error(error);
+        process.exit();
+      }
+    }
 
     this.channel = chan;
 
@@ -82,7 +89,9 @@ export default class Streamer {
         this.channel = undefined;
         resolve();
       });
-      this.childProcess?.on('error', () => reject());
+      this.childProcess?.on('error', () => {
+        if (!this.childProcess?.kill()) reject();
+      });
     });
   }
 }
