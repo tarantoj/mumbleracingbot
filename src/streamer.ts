@@ -90,7 +90,7 @@ export default class Streamer {
       this.childProcess?.stdin?.write('q');
       this.childProcess?.kill();
       this.childProcess?.on('close', () => {
-        logger.info('ffmpeg exited');
+        logger.info('ffmpeg closed');
         this.channel = undefined;
         resolve();
       });
