@@ -55,7 +55,7 @@ const messageListener = async (channel: string,
   if (message.startsWith('!stillhere')) {
     if (process.env.NODE_ENV === 'prod') Streamer.getInstance().stillHere(() => reminderCallback(channel));
     logger.info('Got request to keep streaming');
-    client.say(channel, 'Got it! Will keep streaming for another hour.');
+    client.say(channel, `Got it! Will keep streaming for another ${Streamer.stopTime()} mins.`);
   }
 
   if (message.startsWith('!stop')) {

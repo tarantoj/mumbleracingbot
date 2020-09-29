@@ -16,7 +16,7 @@ export default class Streamer {
 
   private static minToMs = 60000;
 
-  private static stopTime(): number {
+  public static stopTime(): number {
     const mins = Number(process.env.STOP_TIME) ?? 60;
     return mins * Streamer.minToMs;
   }
