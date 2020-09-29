@@ -28,7 +28,7 @@ client.connect()
 
 const reminderCallback = (channel: string) => {
   logger.info('Reminder triggered');
-  client.say(channel, 'Still watching? Send \'!stillhere\' to keep the streaming going for another hour.')
+  client.say(channel, `Still watching? Send \'!stillhere\' to keep the streaming going for another ${Streamer.stopTime()} mins.`)
     .then()
     .catch((reason) => logger.error(`Reminder say failed with ${reason}`));
 };
@@ -71,7 +71,7 @@ const messageListener = async (channel: string,
 
   if (message.startsWith('!help')) {
     logger.info('!help');
-    client.say(channel, '!help: Print this message\n!switch <channel>: Switch to channel specified\n!stop: Stop streaming\n!chans: Get a list of available channels');
+    client.say(channel, '!help: Print this message\r\n!switch <channel>: Switch to channel specified\r\n!stop: Stop streaming\r\n!chans: Get a list of available channels');
   }
 };
 
