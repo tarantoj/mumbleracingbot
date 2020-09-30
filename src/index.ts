@@ -28,7 +28,7 @@ client.connect()
 
 const reminderCallback = (channel: string) => {
   logger.info('Reminder triggered');
-  client.say(channel, `Still watching? Send \'!stillhere\' to keep the streaming going for another ${Streamer.stopTime()} mins.`)
+  client.say(channel, `Still watching? Send \'!stillhere\' to keep the streaming going for another ${process.env.STOP_TIME ?? 60} mins.`)
     .then()
     .catch((reason) => logger.error(`Reminder say failed with ${reason}`));
 };
@@ -55,7 +55,7 @@ const messageListener = async (channel: string,
   if (message.startsWith('!stillhere')) {
     if (process.env.NODE_ENV === 'prod') Streamer.getInstance().stillHere(() => reminderCallback(channel));
     logger.info('Got request to keep streaming');
-    client.say(channel, `Got it! Will keep streaming for another ${Streamer.stopTime()} mins.`);
+    client.say(channel, `Got it! Will keep streaming for another ${process.env.STOP_TIME ?? 60} mins.`);
   }
 
   if (message.startsWith('!stop')) {
