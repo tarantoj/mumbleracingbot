@@ -3,7 +3,6 @@ import * as tmi from 'tmi.js';
 import * as dotenv from 'dotenv';
 import Streamer from './streamer';
 import logger from './logger';
-import { cli } from 'winston/lib/winston/config';
 
 dotenv.config({ path: '.env' });
 
