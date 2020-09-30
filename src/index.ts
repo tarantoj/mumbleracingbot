@@ -33,7 +33,7 @@ const reminderCallback = (channel: string) => {
     .catch((reason) => logger.error(`Reminder say failed with ${reason}`));
 };
 
-const messageListener = async (channel: string,
+const messageListener = (channel: string,
   userstate: tmi.ChatUserstate,
   message: String,
   self: boolean) => {
@@ -49,7 +49,7 @@ const messageListener = async (channel: string,
       Streamer.getInstance().change(chanNum, () => reminderCallback(channel));
     }
     logger.info(`Got request to change to ${chanNum}`);
-    await client.say(channel, `Changing channel to ${chanNum}`);
+    client.say(channel, `Changing channel to ${chanNum}`);
   }
 
   if (message.startsWith('!stillhere')) {
