@@ -4,16 +4,16 @@ module.exports = {
     node: true,
   },
   extends: [
-    'airbnb-base',
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier",
+    "prettier/@typescript-eslint",
   ],
-  parser: '@typescript-eslint/parser',
+  parser: "@typescript-eslint/parser",
   parserOptions: {
     ecmaVersion: 12,
-    sourceType: 'module',
+    sourceType: "module",
   },
-  plugins: [
-    '@typescript-eslint',
-  ],
-  rules: {
-  },
+  plugins: ["@typescript-eslint"],
+  rules: {},
 };
