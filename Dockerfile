@@ -1,4 +1,4 @@
-FROM node:latest AS build
+FROM node:lts-alpine AS build
 
 WORKDIR /usr/src/app
 
@@ -8,7 +8,7 @@ RUN npm install
 COPY . .
 RUN npm run build
 
-FROM node:latest
+FROM node:lts-alpine
 WORKDIR /usr/src/app
 
 COPY package.json .
