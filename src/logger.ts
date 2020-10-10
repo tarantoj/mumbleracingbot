@@ -9,6 +9,8 @@ export default winston.createLogger({
   format: winston.format.combine(
     winston.format.colorize(),
     winston.format.timestamp(),
-    winston.format.prettyPrint()
+    winston.format.prettyPrint(),
+    winston.format.simple(),
+    winston.format.splat()
   ),
 });

@@ -6,7 +6,7 @@ import logger from "./logger";
 
 dotenv.config({ path: ".env" });
 
-process.env.NODE_ENV = process.env.NODE_ENV || "prod";
+process.env.NODE_ENV = process.env.NODE_ENV ?? "prod";
 
 const twitchOpts: tmi.Options = {
   identity: {
@@ -34,8 +34,7 @@ const reminderCallback = (channel: string) => {
   client
     .say(
       channel,
-      `Still watching? Send \'!stillhere\' to keep the streaming going for another ${
-        process.env.STOP_TIME ?? 60
+      `Still watching? Send \'!stillhere\' to keep the streaming going for another ${process.env.STOP_TIME ?? 60
       } mins.`
     )
     .then()
@@ -83,8 +82,7 @@ const messageListener = (
     logger.info("Got request to keep streaming");
     client.say(
       channel,
-      `Got it! Will keep streaming for another ${
-        process.env.STOP_TIME ?? 60
+      `Got it! Will keep streaming for another ${process.env.STOP_TIME ?? 60
       } mins.`
     );
   }
