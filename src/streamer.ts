@@ -63,7 +63,7 @@ export default class Streamer {
     const args = [
       `-loglevel ${process.env.FFMPEG_LOG_LEVEL || "fatal"}`,
       "-re",
-      `-i ${process.env.SOURCE_HOST}/stream/channelnumber/${chan}`,
+      `-i ${process.env.SOURCE_HOST}/stream/channelnumber/${chan}?profile=matroska`,
       "-c copy",
       "-flags +global_header",
       "-fflags +genpts",
