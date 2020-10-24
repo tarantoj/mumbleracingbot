@@ -66,6 +66,7 @@ export default class Streamer {
       `-i ${process.env.SOURCE_HOST}/stream/channelnumber/${chan}`,
       "-c copy",
       "-flags +global_header",
+      "-fflags +genpts",
       "-bsf:a aac_adtstoasc",
       "-bufsize 3000K",
       "-f flv",
