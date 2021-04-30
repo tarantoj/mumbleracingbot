@@ -1,6 +1,5 @@
-import * as _ from "lodash";
-import * as tmi from "tmi.js";
-import * as dotenv from "dotenv";
+import tmi from "tmi.js";
+import dotenv from "dotenv";
 import Streamer from "./streamer";
 import logger from "./logger";
 
@@ -34,10 +33,10 @@ const reminderCallback = (channel: string) => {
   client
     .say(
       channel,
-      `Still watching? Send \'!stillhere\' to keep the streaming going for another ${process.env.STOP_TIME ?? 60
+      `Still watching? Send \'!stillhere\' to keep the streaming going for another ${
+        process.env.STOP_TIME ?? 60
       } mins.`
     )
-    .then()
     .catch((reason) => logger.error(`Reminder say failed with ${reason}`));
 };
 
@@ -53,20 +52,21 @@ const messageListener = (
 
   if (self) return;
   if (
-    !_.includes(
-      process.env.AUTHORISED_USERS?.split(","),
-      userstate.username?.toLowerCase()
+    !(
+      userstate.username &&
+      process.env.AUTHORISED_USERS?.split(",").includes(
+        userstate.username?.toLowerCase()
+      )
     )
   )
     return;
 
   if (message.startsWith("!switch")) {
-    const chanNum = Number(message.split(" ")[1]);
+    const chanNum = +message.split(" ")[1];
     if (
-      !_.includes(
-        process.env.AVAILABLE_CHANNELS?.split(",").map((c) => Number(c)),
-        chanNum
-      )
+      !process.env.AVAILABLE_CHANNELS?.split(",")
+        .map((c) => +c)
+        .includes(chanNum)
     )
       return;
     if (process.env.NODE_ENV === "prod") {
@@ -82,7 +82,8 @@ const messageListener = (
     logger.info("Got request to keep streaming");
     client.say(
       channel,
-      `Got it! Will keep streaming for another ${process.env.STOP_TIME ?? 60
+      `Got it! Will keep streaming for another ${
+        process.env.STOP_TIME ?? 60
       } mins.`
     );
   }
