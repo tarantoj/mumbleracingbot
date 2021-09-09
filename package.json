@@ -15,7 +15,7 @@
     "@tsconfig/recommended": "^1.0.1",
     "@types/ffmpeg-static": "^3.0.0",
     "@types/lodash": "^4.14.172",
-    "@types/node": "^16.6.1",
+    "@types/node": "^16.9.0",
     "@types/tmi.js": "^1.7.2",
     "@typescript-eslint/eslint-plugin": "^4.29.1",
     "@typescript-eslint/parser": "^4.29.1",
