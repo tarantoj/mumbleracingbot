@@ -17,7 +17,7 @@
     "@types/lodash": "^4.14.177",
     "@types/node": "^16.11.11",
     "@types/tmi.js": "^1.8.1",
-    "@typescript-eslint/eslint-plugin": "^5.5.0",
+    "@typescript-eslint/eslint-plugin": "^5.10.2",
     "@typescript-eslint/parser": "^5.4.0",
     "eslint": "^8.2.0",
     "eslint-config-airbnb-base": "^15.0.0",
