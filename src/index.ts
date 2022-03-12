@@ -40,6 +40,12 @@ const reminderCallback = (channel: string) => {
     .catch((reason) => logger.error(`Reminder say failed with ${reason}`));
 };
 
+const availableChannels = process.env.AVAILABLE_CHANNELS?.split(",");
+const authorisedUsers = process.env.AUTHORISED_USERS?.split(",");
+
+if (!authorisedUsers) throw new Error("Must supply authorised users");
+if (!availableChannels) throw new Error("Must supply available channels");
+
 const messageListener = (
   channel: string,
   userstate: tmi.ChatUserstate,
@@ -54,29 +60,26 @@ const messageListener = (
   if (
     !(
       userstate.username &&
-      process.env.AUTHORISED_USERS?.split(",").includes(
-        userstate.username?.toLowerCase()
-      )
+      authorisedUsers.includes(userstate.username?.toLowerCase())
     )
   )
     return;
 
-  if (message.startsWith("!switch")) {
-    const chanNum = +message.split(" ")[1];
-    if (
-      !process.env.AVAILABLE_CHANNELS?.split(",")
-        .map((c) => +c)
-        .includes(chanNum)
-    )
-      return;
+  const [command, ...args] = message.split(" ");
+
+  if (command[1] !== "!") return;
+
+  if (command === "!switch") {
+    const chanNum: string | undefined = args[0];
+    if (!availableChannels.includes(chanNum)) return;
     if (process.env.NODE_ENV === "prod") {
-      Streamer.getInstance().change(chanNum, () => reminderCallback(channel));
+      Streamer.getInstance().change(+chanNum, () => reminderCallback(channel));
     }
     logger.info(`Got request to change to ${chanNum}`);
     client.say(channel, `Changing channel to ${chanNum}`);
   }
 
-  if (message.startsWith("!stillhere")) {
+  if (command === "!stillhere") {
     if (process.env.NODE_ENV === "prod")
       Streamer.getInstance().stillHere(() => reminderCallback(channel));
     logger.info("Got request to keep streaming");
@@ -88,7 +91,7 @@ const messageListener = (
     );
   }
 
-  if (message.startsWith("!stop")) {
+  if (command === "!stop") {
     if (process.env.NODE_ENV === "prod")
       Streamer.getInstance()
         .stop()
@@ -97,15 +100,12 @@ const messageListener = (
     client.say(channel, "Got it! Will stop streaming.");
   }
 
-  if (message.startsWith("!chans")) {
+  if (command === "!chans") {
     logger.info("!chans");
-    client.say(
-      channel,
-      process.env.AVAILABLE_CHANNELS?.split(",").toString() || "None! :("
-    );
+    client.say(channel, availableChannels.join(", "));
   }
 
-  if (message.startsWith("!help")) {
+  if (command === "!help" || command[0] === "!") {
     logger.info("!help");
     client.say(channel, "!help: Print this message");
     client.say(channel, "!switch <channel>: Switch to channel specified");
