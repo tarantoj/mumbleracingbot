@@ -61,7 +61,7 @@ export default class Streamer {
     this.channel = chan;
 
     const args = [
-      `-loglevel ${process.env.FFMPEG_LOG_LEVEL || "fatal"}`,
+      `-loglevel ${process.env.FFMPEG_LOG_LEVEL ?? "fatal"}`,
       "-re",
       `-i ${process.env.SOURCE_HOST}/stream/channelnumber/${chan}?profile=matroska`,
       "-c copy",
@@ -84,6 +84,7 @@ export default class Streamer {
   }
 
   private setTimeouts(
+    // eslint-disable-next-line no-unused-vars
     reminderCallback: (...args: any[]) => void,
     stopCallback: () => void
   ) {
