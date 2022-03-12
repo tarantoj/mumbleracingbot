@@ -84,7 +84,6 @@ export default class Streamer {
   }
 
   private setTimeouts(
-    // eslint-disable-next-line no-unused-vars
     reminderCallback: (...args: any[]) => void,
     stopCallback: () => void
   ) {
