@@ -54,7 +54,7 @@ export class Streamer {
         await this.stop();
       } catch (error) {
         logger.error(error);
-        process.exit();
+        process.exit(1);
       }
     }
 
