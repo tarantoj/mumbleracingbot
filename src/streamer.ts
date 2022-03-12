@@ -1,9 +1,9 @@
 import { ChildProcess, spawn } from "child_process";
 import pathToFfmpeg from "ffmpeg-static";
 import { setTimeout } from "timers";
-import logger from "./logger";
+import { logger } from "./logger";
 
-export default class Streamer {
+export class Streamer {
   private static instance: Streamer;
 
   private channel?: number;
@@ -54,14 +54,14 @@ export default class Streamer {
         await this.stop();
       } catch (error) {
         logger.error(error);
-        process.exit();
+        process.exit(1);
       }
     }
 
     this.channel = chan;
 
     const args = [
-      `-loglevel ${process.env.FFMPEG_LOG_LEVEL || "fatal"}`,
+      `-loglevel ${process.env.FFMPEG_LOG_LEVEL ?? "fatal"}`,
       "-re",
       `-i ${process.env.SOURCE_HOST}/stream/channelnumber/${chan}?profile=matroska`,
       "-c copy",
@@ -84,7 +84,6 @@ export default class Streamer {
   }
 
   private setTimeouts(
-    // eslint-disable-next-line no-unused-vars
     reminderCallback: (...args: any[]) => void,
     stopCallback: () => void
   ) {
