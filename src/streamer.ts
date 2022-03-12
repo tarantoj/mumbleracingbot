@@ -1,9 +1,9 @@
 import { ChildProcess, spawn } from "child_process";
 import pathToFfmpeg from "ffmpeg-static";
 import { setTimeout } from "timers";
-import logger from "./logger";
+import { logger } from "./logger";
 
-export default class Streamer {
+export class Streamer {
   private static instance: Streamer;
 
   private channel?: number;

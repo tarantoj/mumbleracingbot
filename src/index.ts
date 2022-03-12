@@ -1,7 +1,7 @@
 import tmi from "tmi.js";
 import dotenv from "dotenv";
-import Streamer from "./streamer";
-import logger from "./logger";
+import { Streamer } from "./streamer";
+import { logger } from "./logger";
 
 dotenv.config({ path: ".env" });
 
